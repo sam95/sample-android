@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -22,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -29,7 +33,8 @@ import java.net.URL;
 public class MainActivityFragment extends Fragment {
 
     int totlen;
-    String[] imgurl;
+    GridView gv;
+    ImageAdapter ia;
 
     public MainActivityFragment() {
     }
@@ -37,50 +42,64 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        startme();
         container = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
-        GridView gv = (GridView) container.findViewById(R.id.gridid);
-        gv.setAdapter(new ImageAdapter(getActivity().getApplicationContext()));
+        gv = (GridView) container.findViewById(R.id.gridid);
+        ia = new ImageAdapter(getActivity());
+        gv.setAdapter(ia);
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(),String.valueOf(position),Toast.LENGTH_SHORT).show();
+            }
+        });
         return container;
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        startme();
-    }
 
     private void startme() {
         FetchTask ft = new FetchTask();
         ft.execute();
     }
 
-    public class FetchTask extends AsyncTask<Void, Void, Void>{
+    public class FetchTask extends AsyncTask<Void, Void, String[]> {
+        String[] str;
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected void onPostExecute(String[] strings) {
+            if (strings != null) {
+                ia.clear();
+                for(String s : strings){
+                    Log.e("str",s);
+                    ia.add(s);
+                }
+                gv.setAdapter(ia);
+            }
+        }
+
+        @Override
+        protected String[] doInBackground(Void... params) {
             //url = https://api.themoviedb.org/3/discover/movie?api_key=mykey&sort_by=popularity.desc
 
             Uri.Builder build = new Uri.Builder();
-            String key = "mykey";
-            String myresponse="";
+            String key = "acd33ca2ecda96efcdbb331a27597a4d";
+            String myresponse = "";
 
             build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
-                    .appendQueryParameter("api_key",key).appendQueryParameter("sort_by","popularity.desc");
+                    .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", "popularity.desc");
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             Log.e("the url ", build.toString());
-            try
-            {
+            try {
                 URL url = new URL(build.toString());
-                Log.e("reached","finally");
+                Log.e("reached", "finally");
                 urlConnection = (HttpURLConnection) url.openConnection();
-                Log.e("reached","finally");
+                Log.e("reached", "finally");
                 urlConnection.setRequestMethod("GET");
                 Log.e("reached", "finally");
                 urlConnection.connect();
-                Log.e("reached","finally");
+                Log.e("reached", "finally");
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
@@ -102,34 +121,33 @@ public class MainActivityFragment extends Fragment {
                     myresponse = null;
                 }
                 myresponse = buffer.toString();
-                Log.e("the json",myresponse);
-                nowparse(myresponse);
+                Log.e("the json", myresponse);
+                return nowparse(myresponse);
 
-            }
-            catch (java.io.IOException e) {
+            } catch (java.io.IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
-    }
 
-    private void nowparse(String myresponse) {
-        try {
-            JSONObject js = new JSONObject(myresponse);
-            JSONArray ja = js.getJSONArray("results");
-            String imgul="http://image.tmdb.org/t/p/w185/";
-            totlen=ja.length();
-            imgurl = new String[ja.length()];
-            for(int i=0;i<totlen;i++){
-                JSONObject obj = new JSONObject(ja.getString(i));
-                imgurl[i] = imgul + obj.getString("poster_path");
-                Log.e(String.valueOf(i),imgurl[i]);
-                //Picasso.with(getActivity()).load(imgurl).into(R.id.gridid);
+
+        private String[] nowparse(String myresponse) {
+            try {
+                String[] str1;
+                JSONObject js = new JSONObject(myresponse);
+                JSONArray ja = js.getJSONArray("results");
+                String imgul = "http://image.tmdb.org/t/p/w342/";
+                totlen = ja.length();
+                str = new String[totlen];
+                for (int i = 0; i < totlen; i++) {
+                    JSONObject obj = new JSONObject(ja.getString(i));
+                    str[i]=imgul + obj.getString("poster_path");
+                }
+                return str;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            return str;
         }
-
     }
 }
