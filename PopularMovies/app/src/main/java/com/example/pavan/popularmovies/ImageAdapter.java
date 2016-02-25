@@ -46,15 +46,19 @@ public class ImageAdapter extends BaseAdapter {
 
         //Log.e("here","there");
         ImageView view = (ImageView) convertView;
+
         if (view == null) {
             view = new ImageView(cont);
+            //view.setAdjustViewBounds(true);
             //view.setLayoutParams(new GridView.LayoutParams(85, 85));
             //view.setScaleType(ImageView.ScaleType.CENTER_CROP);
             //view.setPadding(8,8,8,8);
 
         } else {
             view = (ImageView) convertView;
+            //view.setAdjustViewBounds(true);
         }
+        view.setAdjustViewBounds(true);
 
         Picasso.with(cont).setLoggingEnabled(true);
         //Log.e("the url", list.get(position));

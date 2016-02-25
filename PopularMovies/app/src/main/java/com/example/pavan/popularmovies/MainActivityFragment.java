@@ -1,7 +1,12 @@
 package com.example.pavan.popularmovies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,6 +59,32 @@ public class MainActivityFragment extends Fragment {
             }
         });
         return container;
+    }
+    public boolean checknet(){
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            // There are no active networks.
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.performClick();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!checknet()) {
+                    Snackbar.make(view, "You must be connected to the Internet", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
     }
 
 
