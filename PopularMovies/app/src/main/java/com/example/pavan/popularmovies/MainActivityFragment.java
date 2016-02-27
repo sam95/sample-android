@@ -106,14 +106,19 @@ public class MainActivityFragment extends Fragment {
             String keyword;
             if(params[0].equals("1")){
                 keyword = "popularity.desc";
+                build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
+                        .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", keyword);
             }
             else
             {
                 keyword = "vote_average.desc";
+                build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
+                        .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", keyword).appendQueryParameter("certification_country","US")
+                .appendQueryParameter("certification","R");
             }
 
-            build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
-                    .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", keyword);
+            //build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
+              //      .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", keyword);
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
