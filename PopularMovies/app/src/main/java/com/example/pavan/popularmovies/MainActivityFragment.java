@@ -1,10 +1,12 @@
 package com.example.pavan.popularmovies;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -48,7 +50,7 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        startme();
+        //startme();
         container = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
         gv = (GridView) container.findViewById(R.id.gridid);
 
@@ -63,15 +65,23 @@ public class MainActivityFragment extends Fragment {
         return container;
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        startme();
+    }
 
 
 
     private void startme() {
         FetchTask ft = new FetchTask();
-        ft.execute();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String choice = prefs.getString(getString(R.string.examplelist),"1");
+        Log.e("choice",choice);
+        ft.execute(choice);
     }
 
-    public class FetchTask extends AsyncTask<Void, Void, String[]> {
+    public class FetchTask extends AsyncTask<String, Void, String[]> {
         String[] str;
 
         @Override
@@ -87,15 +97,23 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        protected String[] doInBackground(Void... params) {
+        protected String[] doInBackground(String... params) {
             //url = https://api.themoviedb.org/3/discover/movie?api_key=mykey&sort_by=popularity.desc
 
             Uri.Builder build = new Uri.Builder();
             String key = "acd33ca2ecda96efcdbb331a27597a4d";
             String myresponse = "";
+            String keyword;
+            if(params[0].equals("1")){
+                keyword = "popularity.desc";
+            }
+            else
+            {
+                keyword = "vote_average.desc";
+            }
 
             build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
-                    .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", "popularity.desc");
+                    .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", keyword);
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
