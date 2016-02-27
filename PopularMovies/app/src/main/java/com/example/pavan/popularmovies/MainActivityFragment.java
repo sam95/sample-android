@@ -47,9 +47,11 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         startme();
         container = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
         gv = (GridView) container.findViewById(R.id.gridid);
+
         ia = new ImageAdapter(getActivity());
         gv.setAdapter(ia);
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -60,32 +62,8 @@ public class MainActivityFragment extends Fragment {
         });
         return container;
     }
-    public boolean checknet(){
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni == null) {
-            // There are no active networks.
-            return false;
-        }
-        return true;
-    }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.performClick();
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!checknet()) {
-                    Snackbar.make(view, "You must be connected to the Internet", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Action", null).show();
-                }
-            }
-        });
 
-    }
 
 
     private void startme() {

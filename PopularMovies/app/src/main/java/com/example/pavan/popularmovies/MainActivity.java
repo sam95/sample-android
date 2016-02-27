@@ -1,6 +1,7 @@
 package com.example.pavan.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -22,8 +23,30 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FloatingActionButton fab = (FloatingActionButton) this.findViewById(R.id.fab);
+        fab.performClick();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!checknet()) {
+                    Snackbar.make(view, "You must be connected to the Internet", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
         GridView gv = (GridView)findViewById(R.id.gridid);
         gv.setAdapter(new ImageAdapter(this));
+    }
+
+    public boolean checknet(){
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            // There are no active networks.
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -42,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent iu = new Intent(this,SettingsActivity.class);
+            startActivity(iu);
             return true;
         }
 
