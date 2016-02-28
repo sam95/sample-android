@@ -98,23 +98,22 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected String[] doInBackground(String... params) {
-            //url = https://api.themoviedb.org/3/discover/movie?api_key=mykey&sort_by=popularity.desc
-
+            //url = https://api.themoviedb.org/3/movie/popular?api_key=mykey
+            //url = https://api.themoviedb.org/3/movie/top_rated?api_key=mykey
             Uri.Builder build = new Uri.Builder();
-            String key = "acd33ca2ecda96efcdbb331a27597a4d";
+            String key = "key";
             String myresponse = "";
-            String keyword;
+
             if(params[0].equals("1")){
-                keyword = "popularity.desc";
-                build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
-                        .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", keyword);
+
+                build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("movie").appendPath("popular")
+                        .appendQueryParameter("api_key", key);
             }
             else
             {
-                keyword = "vote_average.desc";
-                build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
-                        .appendQueryParameter("api_key", key).appendQueryParameter("sort_by", keyword).appendQueryParameter("certification_country","US")
-                .appendQueryParameter("certification","R");
+
+                build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("movie").appendPath("top_rated")
+                        .appendQueryParameter("api_key", key);
             }
 
             //build.scheme("http").authority("api.themoviedb.org").appendPath("3").appendPath("discover").appendPath("movie")
