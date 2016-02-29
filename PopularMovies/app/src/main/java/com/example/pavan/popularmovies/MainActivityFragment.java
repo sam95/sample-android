@@ -1,6 +1,7 @@
 package com.example.pavan.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,6 +42,9 @@ public class MainActivityFragment extends Fragment {
 
     int totlen;
     GridView gv;
+    String thedata[];
+    String[] thename;
+    String[] theurl;
     ImageAdapter ia;
 
     public MainActivityFragment() {
@@ -59,6 +63,11 @@ public class MainActivityFragment extends Fragment {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent iu = new Intent(view.getContext(),ScrollingActivity.class);
+                iu.putExtra("data",thedata[position]);
+                iu.putExtra("url",theurl[position]);
+                iu.putExtra("name",thename[position]);
+                startActivity(iu);
                 Toast.makeText(getActivity(),String.valueOf(position),Toast.LENGTH_SHORT).show();
             }
         });
@@ -101,7 +110,7 @@ public class MainActivityFragment extends Fragment {
             //url = https://api.themoviedb.org/3/movie/popular?api_key=mykey
             //url = https://api.themoviedb.org/3/movie/top_rated?api_key=mykey
             Uri.Builder build = new Uri.Builder();
-            String key = "key";
+            String key = "acd33ca2ecda96efcdbb331a27597a4d";
             String myresponse = "";
 
             if(params[0].equals("1")){
@@ -169,9 +178,15 @@ public class MainActivityFragment extends Fragment {
                 JSONArray ja = js.getJSONArray("results");
                 String imgul = "http://image.tmdb.org/t/p/w342/";
                 totlen = ja.length();
+                thedata = new String[totlen];
+                theurl = new String[totlen];
+                thename = new String[totlen];
                 str = new String[totlen];
                 for (int i = 0; i < totlen; i++) {
                     JSONObject obj = new JSONObject(ja.getString(i));
+                    thedata[i] = obj.getString("overview")+"\n\nRelease date : "+obj.getString("release_date")+"\n\nAverage rating : "+obj.getString("vote_average");
+                    thename[i] = obj.getString("title");
+                    theurl[i] = "http://image.tmdb.org/t/p/w342/"+obj.getString("backdrop_path").substring(1);
                     str[i]=imgul + obj.getString("poster_path");
                 }
                 return str;
