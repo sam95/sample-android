@@ -110,7 +110,7 @@ public class MainActivityFragment extends Fragment {
             //url = https://api.themoviedb.org/3/movie/popular?api_key=mykey
             //url = https://api.themoviedb.org/3/movie/top_rated?api_key=mykey
             Uri.Builder build = new Uri.Builder();
-            String key = "acd33ca2ecda96efcdbb331a27597a4d";
+            String key = "mykey";
             String myresponse = "";
 
             if(params[0].equals("1")){
@@ -133,13 +133,13 @@ public class MainActivityFragment extends Fragment {
             Log.e("the url ", build.toString());
             try {
                 URL url = new URL(build.toString());
-                Log.e("reached", "finally");
+                //Log.e("reached", "finally");
                 urlConnection = (HttpURLConnection) url.openConnection();
-                Log.e("reached", "finally");
+                //Log.e("reached", "finally");
                 urlConnection.setRequestMethod("GET");
-                Log.e("reached", "finally");
+                //Log.e("reached", "finally");
                 urlConnection.connect();
-                Log.e("reached", "finally");
+                //Log.e("reached", "finally");
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
@@ -161,7 +161,7 @@ public class MainActivityFragment extends Fragment {
                     myresponse = null;
                 }
                 myresponse = buffer.toString();
-                Log.e("the json", myresponse);
+                //Log.e("the json", myresponse);
                 return nowparse(myresponse);
 
             } catch (java.io.IOException e) {
