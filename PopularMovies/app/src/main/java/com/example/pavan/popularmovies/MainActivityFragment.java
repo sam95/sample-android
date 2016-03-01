@@ -184,9 +184,9 @@ public class MainActivityFragment extends Fragment {
                 str = new String[totlen];
                 for (int i = 0; i < totlen; i++) {
                     JSONObject obj = new JSONObject(ja.getString(i));
-                    thedata[i] = obj.getString("overview")+"\n\nRelease date : "+obj.getString("release_date")+"\n\nAverage rating : "+obj.getString("vote_average");
+                    thedata[i] = "\n\nOverview : "+obj.getString("overview")+"\n\nRelease date : "+obj.getString("release_date")+"\n\nAverage rating : "+obj.getString("vote_average");
                     thename[i] = obj.getString("title");
-                    theurl[i] = "http://image.tmdb.org/t/p/w342/"+obj.getString("backdrop_path").substring(1);
+                    theurl[i] = "http://image.tmdb.org/t/p/w500/"+obj.getString("backdrop_path").substring(1);
                     str[i]=imgul + obj.getString("poster_path");
                 }
                 return str;
