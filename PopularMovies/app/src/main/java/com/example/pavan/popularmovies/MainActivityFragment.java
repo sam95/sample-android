@@ -1,39 +1,27 @@
 package com.example.pavan.popularmovies;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -133,21 +121,15 @@ public class MainActivityFragment extends Fragment {
             Log.e("the url ", build.toString());
             try {
                 URL url = new URL(build.toString());
-                //Log.e("reached", "finally");
                 urlConnection = (HttpURLConnection) url.openConnection();
-                //Log.e("reached", "finally");
                 urlConnection.setRequestMethod("GET");
-                //Log.e("reached", "finally");
                 urlConnection.connect();
-                //Log.e("reached", "finally");
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
                     myresponse = null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
-
                 String line;
                 while ((line = reader.readLine()) != null) {
                     // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
@@ -155,13 +137,7 @@ public class MainActivityFragment extends Fragment {
                     // buffer for debugging.
                     buffer.append(line + "\n");
                 }
-
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
-                    myresponse = null;
-                }
                 myresponse = buffer.toString();
-                //Log.e("the json", myresponse);
                 return nowparse(myresponse);
 
             } catch (java.io.IOException e) {
