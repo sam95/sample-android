@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         Button xyz = (Button) findViewById(R.id.app5);
         Button cap = (Button) findViewById(R.id.app6);;
 
+        //Effective way of using multiple buttons
         View.OnClickListener myhandler = new View.OnClickListener() {
 
             @Override
